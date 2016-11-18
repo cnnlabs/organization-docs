@@ -6,8 +6,6 @@
 - [Accepting Modifications](#accepting-modifications)
   - [Involving the PO/TC](#involving-the-potc)
 - [Landing Pull Requests](#landing-pull-requests)
-  - [Summarized Technical HOWTO](#summarized-technical-howto)
-  - [Detailed Technical HOWTO](#detailed-technical-howto)
   - [I've made a huge mistake](#ive-made-a-huge-mistake)
 - [Creating a Release](#creating-a-release)
 
@@ -189,4 +187,4 @@ Copy the CHANGELOG.md entry you made earlier.  Add the release notes to GitHub.
 Goto https://github.com/ORG_NAME/REPO_NAME/tags and click
 _**Add Release Notes**_ next to the tag that was pushed up earlier.
 
-Publish the released version to npm.
+Publish the released version to npm (if needed).
