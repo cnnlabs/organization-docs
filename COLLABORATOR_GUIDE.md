@@ -99,6 +99,12 @@ The PO/TC should server as the final arbiter where required.
 
 ## Landing Pull Requests
 
+On GitHub, this has been made very easy.  When a Pull Request is ready to be merged in, 
+click the "Squash and merge" button.
+
+On BitBucket, this is not an option.  You can manually squash and merge the commits into
+a single commit, but it is more trouble than it is worth.
+
 Always modify the original commit message to include additional meta information
 regarding the change process:
 
@@ -125,138 +131,6 @@ Additionally:
   (meaning every commit should pass all tests).  This makes it much easier when
   bisecting to find a breaking change.
 
-
-### Summarized Technical HOWTO
-
-The Detailed Technical HOWTO above covers all the bases.  You rarely need to do
-many of those steps though.  Here is a summary for the typical landing of a PR.
-
-```shell
-$ git checkout develop
-$ git fetch -p; git pull origin develop
-$ curl -L $ curl -L https://patch-diff.githubusercontent.com/raw/ORG_NAME/REPO_NAME/pull/171.patch?token=VALID_TOKEN | git am -3
-$ git rebase -i origin/develop
-
-... squash all commits except for the first one ...
-
-$ git push origin develop
-```
-
-If you run into any problem, do a `git rebase --abort` and click the _**Merge**_
-button on the PR.
-
-
-### Detailed Technical HOWTO
-
-Ensure that you are not in a borked `am`/`rebase` state.
-
-```shell
-$ git am --abort
-$ git rebase --abort
-```
-
-Checkout proper target branch
-
-```shell
-$ git checkout develop
-```
-
-Update the tree
-
-```shell
-$ git fetch origin
-$ git merge --ff-only origin/develop
-```
-
-Apply external patches.  Go to the pull request that is about to get landed and
-add `.patch` to the end of the URL and hit return.  It will redirect to a patch
-of the changes.  Copy that URL and use it below.
-
-```shell
-$ curl -L https://patch-diff.githubusercontent.com/raw/ORG_NAME/REPO_NAME/pull/PR_NUMBER.patch?token=VALID_TOKEN | git am -3
-```
-
-Check and re-review the changes, they should match exactly what is in the pull
-request.
-
-```shell
-git diff origin/develop
-```
-
-Check number of commits and commit messages, they should match exactly what is
-in the pull request.
-
-```shell
-$ git log origin/develop...develop
-```
-
-Next, reword the commit to add in the `PR-URL` and `Reveiwed-By` details.  If
-there are multiple commits that relate to the same feature or one with a feature
-and separate with a test for that feature, you'll need to use `squash` or
-`fixup`:
-
-```shell
-$ git rebase -i origin/develop
-```
-
-This will open a screen like this (in the default shell editor):
-
-```text
-pick 6928fc1 crypto: add feature A
-pick 8120c4c add test for feature A
-pick 51759dc feature B
-pick 7d6f433 test for feature B
-
-# Rebase f9456a2..7d6f433 onto f9456a2
-#
-# Commands:
-#  p, pick = use commit
-#  r, reword = use commit, but edit the commit message
-#  e, edit = use commit, but stop for amending
-#  s, squash = use commit, but meld into previous commit
-#  f, fixup = like "squash", but discard this commit's log message
-#  x, exec = run command (the rest of the line) using shell
-#
-# These lines can be re-ordered; they are executed from top to bottom.
-#
-# If you remove a line here THAT COMMIT WILL BE LOST.
-#
-# However, if you remove everything, the rebase will be aborted.
-#
-# Note that empty commits are commented out
-```
-
-Replace a couple of `pick`s with `fixup` to squash them into a previous commit:
-
-```text
-pick 6928fc1 crypto: add feature A
-fixup 8120c4c add test for feature A
-pick 51759dc feature B
-fixup 7d6f433 test for feature B
-```
-
-Replace `pick` with `reword` to change the commit message:
-
-```text
-reword 6928fc1 crypto: add feature A
-fixup 8120c4c add test for feature A
-reword 51759dc feature B
-fixup 7d6f433 test for feature B
-```
-
-Save the file and close the editor.  You'll be asked to enter a new commit
-message for that commit.  This is a good moment to fix incorrect commit logs,
-ensure that they are properly formatted, and add `Reviewed-By` lines.
-
-Time to push it:
-
-```shell
-$ git push origin develop
-```
-
-Now add a comment to the pull request with the commit sha that the Pull Request
-landed into develop in.  You can get this from the commits page for the develop
-branch. Next close the pull request and delete the branch.
 
 
 ### I've made a huge mistake
